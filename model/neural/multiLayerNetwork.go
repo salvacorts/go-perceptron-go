@@ -9,11 +9,11 @@ import (
 	"math"
 
 	// third part import
-	log "github.com/sirupsen/logrus"
 	mu "github.com/salvacorts/go-perceptron-go/util"
+	log "github.com/sirupsen/logrus"
 
-	"time"
 	"math/rand"
+	"time"
 )
 
 func init() {
@@ -36,7 +36,6 @@ type MultiLayerNetwork struct {
 
 	// Transfer function derivative
 	T_func_d transferFunction
-
 }
 
 // PrepareMLPNet create a multi layer Perceptron neural network.
@@ -73,16 +72,15 @@ func PrepareMLPNet(l []int, lr float64, tf transferFunction, trd transferFunctio
 	}
 
 	log.WithFields(log.Fields{
-		"level":     "info",
-		"msg":       "multilayer perceptron init completed",
-		"layers":  len(mlp.NeuralLayers),
+		"level":          "info",
+		"msg":            "multilayer perceptron init completed",
+		"layers":         len(mlp.NeuralLayers),
 		"learningRate: ": mlp.L_rate,
 	}).Info("Complete Multilayer Perceptron init.")
 
 	return
 
 }
-
 
 // PrepareElmanNet create a recurrent neUral network neural network.
 // [l:[]int] is an int array with layers neurons number [input, ..., output]
@@ -92,14 +90,14 @@ func PrepareMLPNet(l []int, lr float64, tf transferFunction, trd transferFunctio
 func PrepareElmanNet(i int, h int, o int, lr float64, tf transferFunction, trd transferFunction) (rnn MultiLayerNetwork) {
 
 	// setup a three layer network with Input Context dimension
-	rnn = PrepareMLPNet([]int{i, h, o}, lr, tf, trd);
+	rnn = PrepareMLPNet([]int{i, h, o}, lr, tf, trd)
 
 	log.WithFields(log.Fields{
-		"level":       "info",
-		"msg":         "recurrent neural network init completed",
-		"inputLayer":   i,
-		"hiddenLayer":  h,
-		"outputLayer":  o,
+		"level":          "info",
+		"msg":            "recurrent neural network init completed",
+		"inputLayer":     i,
+		"hiddenLayer":    h,
+		"outputLayer":    o,
 		"learningRate: ": rnn.L_rate,
 	}).Info("Complete RNN init.")
 
@@ -155,18 +153,18 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 			nv = 0.0
 
 			// for each neurons in previous level (for k = 1, INPUT)
-			for j := 0; j < mlp.NeuralLayers[k - 1].Length; j++ {
+			for j := 0; j < mlp.NeuralLayers[k-1].Length; j++ {
 
 				// sum output value of previous neurons multiplied by weight between previous and focused neuron
-				nv += mlp.NeuralLayers[k].NeuronUnits[i].Weights[j] * mlp.NeuralLayers[k - 1].NeuronUnits[j].Value
+				nv += mlp.NeuralLayers[k].NeuronUnits[i].Weights[j] * mlp.NeuralLayers[k-1].NeuronUnits[j].Value
 
 				log.WithFields(log.Fields{
-					"level":     "debug",
-					"msg":       "multilayer perceptron execution",
-					"len(mlp.NeuralLayers)":  len(mlp.NeuralLayers),
-					"layer:  ": k,
-					"neuron: ": i,
-					"previous neuron: ": j,
+					"level":                 "debug",
+					"msg":                   "multilayer perceptron execution",
+					"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
+					"layer:  ":              k,
+					"neuron: ":              i,
+					"previous neuron: ":     j,
 				}).Debug("Compute output propagation.")
 
 			}
@@ -183,12 +181,12 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 				for z := len(s.Features); z < mlp.NeuralLayers[0].Length; z++ {
 
 					log.WithFields(log.Fields{
-						"level"				: "debug",
-						"len z" 			: z,
-						"s.Features"		: s.Features,
-						"len(s.Features)" : len(s.Features),
-						"len mlp.NeuralLayers[0].NeuronUnits" : len(mlp.NeuralLayers[0].NeuronUnits),
-						"len mlp.NeuralLayers[k].NeuronUnits" : len(mlp.NeuralLayers[k].NeuronUnits),
+						"level":                               "debug",
+						"len z":                               z,
+						"s.Features":                          s.Features,
+						"len(s.Features)":                     len(s.Features),
+						"len mlp.NeuralLayers[0].NeuronUnits": len(mlp.NeuralLayers[0].NeuronUnits),
+						"len mlp.NeuralLayers[k].NeuronUnits": len(mlp.NeuralLayers[k].NeuronUnits),
 					}).Debug("Save output of hidden layer to context.")
 
 					mlp.NeuralLayers[0].NeuronUnits[z].Value = mlp.NeuralLayers[k].NeuronUnits[z-len(s.Features)].Value
@@ -198,18 +196,17 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 			}
 
 			log.WithFields(log.Fields{
-				"level":     "debug",
-				"msg":       "setup new neuron output value after transfer function application",
-				"len(mlp.NeuralLayers)":  len(mlp.NeuralLayers),
-				"layer:  ": k,
-				"neuron: ": i,
-				"outputvalue" : mlp.NeuralLayers[k].NeuronUnits[i].Value,
+				"level":                 "debug",
+				"msg":                   "setup new neuron output value after transfer function application",
+				"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
+				"layer:  ":              k,
+				"neuron: ":              i,
+				"outputvalue":           mlp.NeuralLayers[k].NeuronUnits[i].Value,
 			}).Debug("Setup new neuron output value after transfer function application.")
 
 		}
 
 	}
-
 
 	// get ouput values
 	for i := 0; i < mlp.NeuralLayers[len(mlp.NeuralLayers)-1].Length; i++ {
@@ -223,8 +220,6 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 
 }
 
-
-
 // BackPropagation algorithm for assisted learning. Convergence is not guaranteed and very slow.
 // Use as a stop criterion the average between previous and current errors and a maximum number of iterations.
 // [mlp:MultiLayerNetwork] input value		[s:Pattern] input value (scaled between 0 and 1)
@@ -232,7 +227,7 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 // return [r:float64] delta error between generated output and expected output
 func BackPropagate(mlp *MultiLayerNetwork, s *Pattern, o []float64, options ...int) (r float64) {
 
-	var no []float64;
+	var no []float64
 	// execute network with pattern passed over each level to output
 	if len(options) == 1 {
 		no = Execute(mlp, s, options[0])
@@ -257,7 +252,7 @@ func BackPropagate(mlp *MultiLayerNetwork, s *Pattern, o []float64, options ...i
 
 	// backpropagate error to previous layers
 	// for each layers starting from the last hidden (len(mlp.NeuralLayers)-2)
-	for k := len(mlp.NeuralLayers)-2; k >= 0; k-- {
+	for k := len(mlp.NeuralLayers) - 2; k >= 0; k-- {
 
 		// compute actual layer errors and re-compute delta
 		for i := 0; i < mlp.NeuralLayers[k].Length; i++ {
@@ -266,10 +261,10 @@ func BackPropagate(mlp *MultiLayerNetwork, s *Pattern, o []float64, options ...i
 			e = 0.0
 
 			// for each link to next layer
-			for j := 0; j < mlp.NeuralLayers[k + 1].Length; j++ {
+			for j := 0; j < mlp.NeuralLayers[k+1].Length; j++ {
 
 				// sum delta value of next neurons multiplied by weight between focused neuron and all neurons in next level
-				e += mlp.NeuralLayers[k + 1].NeuronUnits[j].Delta * mlp.NeuralLayers[k + 1].NeuronUnits[j].Weights[i]
+				e += mlp.NeuralLayers[k+1].NeuronUnits[j].Delta * mlp.NeuralLayers[k+1].NeuronUnits[j].Weights[i]
 
 			}
 
@@ -280,19 +275,19 @@ func BackPropagate(mlp *MultiLayerNetwork, s *Pattern, o []float64, options ...i
 
 		// compute weights in the next layer
 		// for each link to next layer
-		for i := 0; i < mlp.NeuralLayers[k + 1].Length; i++ {
+		for i := 0; i < mlp.NeuralLayers[k+1].Length; i++ {
 
 			// for each neurons in actual level (for k = 0, INPUT)
 			for j := 0; j < mlp.NeuralLayers[k].Length; j++ {
 
 				// sum learning rate * next level next neuron Delta * actual level actual neuron output value
-				mlp.NeuralLayers[k + 1].NeuronUnits[i].Weights[j] +=
-					mlp.L_rate * mlp.NeuralLayers[k + 1].NeuronUnits[i].Delta * mlp.NeuralLayers[k].NeuronUnits[j].Value
+				mlp.NeuralLayers[k+1].NeuronUnits[i].Weights[j] +=
+					mlp.L_rate * mlp.NeuralLayers[k+1].NeuronUnits[i].Delta * mlp.NeuralLayers[k].NeuronUnits[j].Value
 
 			}
 
 			// learning rate * next level next neuron Delta * actual level actual neuron output value
-			mlp.NeuralLayers[k + 1].NeuronUnits[i].Bias += mlp.L_rate * mlp.NeuralLayers[k + 1].NeuronUnits[i].Delta
+			mlp.NeuralLayers[k+1].NeuronUnits[i].Bias += mlp.L_rate * mlp.NeuralLayers[k+1].NeuronUnits[i].Delta
 
 		}
 
@@ -326,7 +321,7 @@ func BackPropagate(mlp *MultiLayerNetwork, s *Pattern, o []float64, options ...i
 }
 
 // MLPTrain train a mlp MultiLayerNetwork with BackPropagation algorithm for assisted learning.
-func MLPTrain(mlp *MultiLayerNetwork, patterns []Pattern, mapped []string, epochs int) {
+func MLPTrain(mlp *MultiLayerNetwork, patterns []Pattern, mapped []string, epochs int, bp ...bool) {
 
 	epoch := 0
 	output := make([]float64, len(mapped))
@@ -338,21 +333,23 @@ func MLPTrain(mlp *MultiLayerNetwork, patterns []Pattern, mapped []string, epoch
 		for _, pattern := range patterns {
 
 			// setup desired output for each unit
-			for io, _ := range output {
+			for io := range output {
 				output[io] = 0.0
 			}
 			// setup desired output for specific class of pattern focused
 			output[int(pattern.SingleExpectation)] = 1.0
-			// back propagation
-			BackPropagate(mlp, &pattern, output)
 
+			// back propagation
+			if len(bp) > 0 && bp[0] {
+				BackPropagate(mlp, &pattern, output)
+			}
 		}
 
 		log.WithFields(log.Fields{
-			"level":             "info",
-			"place":             "validation",
-			"method":            "MLPTrain",
-			"epoch":        	 epoch,
+			"level":  "info",
+			"place":  "validation",
+			"method": "MLPTrain",
+			"epoch":  epoch,
 		}).Debug("Training epoch completed.")
 
 		// if max number of epochs is reached
@@ -384,34 +381,34 @@ func ElmanTrain(mlp *MultiLayerNetwork, patterns []Pattern, epochs int) {
 			// back propagation
 			BackPropagate(mlp, &pattern, pattern.MultipleExpectation, 1)
 
-			if (epoch % 100 == 0 && p_i == p_i_r) {
+			if epoch%100 == 0 && p_i == p_i_r {
 
 				// get output from network
 				o_out := Execute(mlp, &pattern, 1)
-				for o_out_i, o_out_v := range(o_out) {
+				for o_out_i, o_out_v := range o_out {
 					o_out[o_out_i] = mu.Round(o_out_v, .5, 0)
 				}
 				log.WithFields(log.Fields{
-					"SUM":	"  ==========================",
+					"SUM": "  ==========================",
 				}).Info()
 				log.WithFields(log.Fields{
-					"a_n_1":	mu.ConvertBinToInt(pattern.Features[0:int(len(pattern.Features)/2)]),
-					"a_n_2":	pattern.Features[0:int(len(pattern.Features)/2)],
+					"a_n_1": mu.ConvertBinToInt(pattern.Features[0:int(len(pattern.Features)/2)]),
+					"a_n_2": pattern.Features[0:int(len(pattern.Features)/2)],
 				}).Info()
 				log.WithFields(log.Fields{
-					"b_n_1":	mu.ConvertBinToInt(pattern.Features[int(len(pattern.Features)/2):]),
-					"b_n_2":	pattern.Features[int(len(pattern.Features)/2):],
+					"b_n_1": mu.ConvertBinToInt(pattern.Features[int(len(pattern.Features)/2):]),
+					"b_n_2": pattern.Features[int(len(pattern.Features)/2):],
 				}).Info()
 				log.WithFields(log.Fields{
-					"sum_1":	mu.ConvertBinToInt(pattern.MultipleExpectation),
-					"sum_2":	pattern.MultipleExpectation,
+					"sum_1": mu.ConvertBinToInt(pattern.MultipleExpectation),
+					"sum_2": pattern.MultipleExpectation,
 				}).Info()
 				log.WithFields(log.Fields{
-					"sum_1":	mu.ConvertBinToInt(o_out),
-					"sum_2":	o_out,
+					"sum_1": mu.ConvertBinToInt(o_out),
+					"sum_2": o_out,
 				}).Info()
 				log.WithFields(log.Fields{
-					"END":	"  ==========================",
+					"END": "  ==========================",
 				}).Info()
 
 			}
@@ -419,10 +416,10 @@ func ElmanTrain(mlp *MultiLayerNetwork, patterns []Pattern, epochs int) {
 		}
 
 		log.WithFields(log.Fields{
-			"level":             "info",
-			"place":             "validation",
-			"method":            "ElmanTrain",
-			"epoch":        	 epoch,
+			"level":  "info",
+			"place":  "validation",
+			"method": "ElmanTrain",
+			"epoch":  epoch,
 		}).Debug("Training epoch completed.")
 
 		// if max number of epochs is reached
