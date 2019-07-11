@@ -10,7 +10,7 @@ import (
 
 	// third part import
 	log "github.com/sirupsen/logrus"
-	mu "github.com/made2591/go-perceptron-go/util"
+	mu "github.com/salvacorts/go-perceptron-go/util"
 
 	"time"
 	"math/rand"

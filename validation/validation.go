@@ -8,8 +8,8 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	// internal import
-	mn "github.com/made2591/go-perceptron-go/model/neural"
-	mu "github.com/made2591/go-perceptron-go/util"
+	mn "github.com/salvacorts/go-perceptron-go/model/neural"
+	mu "github.com/salvacorts/go-perceptron-go/util"
 
 	//"fmt"
 )

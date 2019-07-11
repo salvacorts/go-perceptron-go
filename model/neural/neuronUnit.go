@@ -11,7 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	// this repo internal import
-	mu "github.com/made2591/go-perceptron-go/util"
+	mu "github.com/salvacorts/go-perceptron-go/util"
 )
 
 const (

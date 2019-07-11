@@ -2,13 +2,11 @@
 package neural
 
 import (
-
 	// sys import
 	"os"
 
 	// third part import
 	log "github.com/sirupsen/logrus"
-
 )
 
 // Level struct represents a simple NeuronUnits network with a slice of n NeuronUnits.
@@ -18,7 +16,6 @@ type NeuralLayer struct {
 	NeuronUnits []NeuronUnit
 	// Lrate represents number of NeuronUnit in layer
 	Length int
-
 }
 
 // #######################################################################################
@@ -45,9 +42,9 @@ func PrepareLayer(n int, p int) (l NeuralLayer) {
 	}
 
 	log.WithFields(log.Fields{
-		"level":   "info",
-		"msg":     "multilayer perceptron init completed",
-		"neurons": len(l.NeuronUnits),
+		"level":               "info",
+		"msg":                 "multilayer perceptron init completed",
+		"neurons":             len(l.NeuronUnits),
 		"lengthPreviousLayer": l.Length,
 	}).Info("Complete NeuralLayer init.")
 
