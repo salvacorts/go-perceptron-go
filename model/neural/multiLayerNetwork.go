@@ -158,14 +158,14 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 				// sum output value of previous neurons multiplied by weight between previous and focused neuron
 				nv += mlp.NeuralLayers[k].NeuronUnits[i].Weights[j] * mlp.NeuralLayers[k-1].NeuronUnits[j].Value
 
-				log.WithFields(log.Fields{
-					"level":                 "debug",
-					"msg":                   "multilayer perceptron execution",
-					"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
-					"layer:  ":              k,
-					"neuron: ":              i,
-					"previous neuron: ":     j,
-				}).Debug("Compute output propagation.")
+				// log.WithFields(log.Fields{
+				// 	"level":                 "debug",
+				// 	"msg":                   "multilayer perceptron execution",
+				// 	"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
+				// 	"layer:  ":              k,
+				// 	"neuron: ":              i,
+				// 	"previous neuron: ":     j,
+				// }).Debug("Compute output propagation.")
 
 			}
 
@@ -180,14 +180,14 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 
 				for z := len(s.Features); z < mlp.NeuralLayers[0].Length; z++ {
 
-					log.WithFields(log.Fields{
-						"level":                               "debug",
-						"len z":                               z,
-						"s.Features":                          s.Features,
-						"len(s.Features)":                     len(s.Features),
-						"len mlp.NeuralLayers[0].NeuronUnits": len(mlp.NeuralLayers[0].NeuronUnits),
-						"len mlp.NeuralLayers[k].NeuronUnits": len(mlp.NeuralLayers[k].NeuronUnits),
-					}).Debug("Save output of hidden layer to context.")
+					// log.WithFields(log.Fields{
+					// 	"level":                               "debug",
+					// 	"len z":                               z,
+					// 	"s.Features":                          s.Features,
+					// 	"len(s.Features)":                     len(s.Features),
+					// 	"len mlp.NeuralLayers[0].NeuronUnits": len(mlp.NeuralLayers[0].NeuronUnits),
+					// 	"len mlp.NeuralLayers[k].NeuronUnits": len(mlp.NeuralLayers[k].NeuronUnits),
+					// }).Debug("Save output of hidden layer to context.")
 
 					mlp.NeuralLayers[0].NeuronUnits[z].Value = mlp.NeuralLayers[k].NeuronUnits[z-len(s.Features)].Value
 
@@ -195,14 +195,14 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 
 			}
 
-			log.WithFields(log.Fields{
-				"level":                 "debug",
-				"msg":                   "setup new neuron output value after transfer function application",
-				"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
-				"layer:  ":              k,
-				"neuron: ":              i,
-				"outputvalue":           mlp.NeuralLayers[k].NeuronUnits[i].Value,
-			}).Debug("Setup new neuron output value after transfer function application.")
+			// log.WithFields(log.Fields{
+			// 	"level":                 "debug",
+			// 	"msg":                   "setup new neuron output value after transfer function application",
+			// 	"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
+			// 	"layer:  ":              k,
+			// 	"neuron: ":              i,
+			// 	"outputvalue":           mlp.NeuralLayers[k].NeuronUnits[i].Value,
+			// }).Debug("Setup new neuron output value after transfer function application.")
 
 		}
 
@@ -345,12 +345,12 @@ func MLPTrain(mlp *MultiLayerNetwork, patterns []Pattern, mapped []string, epoch
 			}
 		}
 
-		log.WithFields(log.Fields{
-			"level":  "info",
-			"place":  "validation",
-			"method": "MLPTrain",
-			"epoch":  epoch,
-		}).Debug("Training epoch completed.")
+		// log.WithFields(log.Fields{
+		// 	"level":  "info",
+		// 	"place":  "validation",
+		// 	"method": "MLPTrain",
+		// 	"epoch":  epoch,
+		// }).Debug("Training epoch completed.")
 
 		// if max number of epochs is reached
 		if epoch > epochs {

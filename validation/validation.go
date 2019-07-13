@@ -10,7 +10,6 @@ import (
 	// internal import
 	mn "github.com/salvacorts/go-perceptron-go/model/neural"
 	mu "github.com/salvacorts/go-perceptron-go/util"
-
 	//"fmt"
 )
 
@@ -440,19 +439,19 @@ func RNNValidation(mlp *mn.MultiLayerNetwork, patterns []mn.Pattern, epochs int,
 	for p_i, pattern := range patterns {
 		// get output from network
 		o_out := mn.Execute(mlp, &pattern, 1)
-		for o_out_i, o_out_v := range(o_out) {
+		for o_out_i, o_out_v := range o_out {
 			o_out[o_out_i] = mu.Round(o_out_v, .5, 0)
 		}
 		log.WithFields(log.Fields{
-			"a_p_b":	pattern.Features,
-			"rea_c":	pattern.MultipleExpectation,
-			"pre_c":	o_out,
+			"a_p_b": pattern.Features,
+			"rea_c": pattern.MultipleExpectation,
+			"pre_c": o_out,
 		}).Debug()
 
 		// add to predicted values
 		_, p_cor = mn.Accuracy(pattern.MultipleExpectation, o_out)
 		// compute score
-		scores[p_i] = p_cor;
+		scores[p_i] = p_cor
 	}
 
 	// compute average score

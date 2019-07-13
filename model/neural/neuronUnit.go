@@ -15,9 +15,7 @@ import (
 )
 
 const (
-
 	SCALING_FACTOR = 0.0000000000001
-
 )
 
 // NeuronUnit struct represents a simple NeuronUnit network with a slice of n weights.
@@ -34,7 +32,6 @@ type NeuronUnit struct {
 	Value float64
 	// Delta represents delta error for unit
 	Delta float64
-
 }
 
 // #######################################################################################
@@ -58,7 +55,7 @@ func RandomNeuronInit(neuron *NeuronUnit, dim int) {
 	}
 
 	// init random bias and lrate
-	neuron.Bias  = rand.NormFloat64() * SCALING_FACTOR
+	neuron.Bias = rand.NormFloat64() * SCALING_FACTOR
 	neuron.Lrate = rand.NormFloat64() * SCALING_FACTOR
 	neuron.Value = rand.NormFloat64() * SCALING_FACTOR
 	neuron.Delta = rand.NormFloat64() * SCALING_FACTOR
@@ -93,13 +90,13 @@ func UpdateWeights(neuron *NeuronUnit, pattern *Pattern) (float64, float64) {
 	predictedValue = Predict(neuron, pattern)
 	postError = pattern.SingleExpectation - predictedValue
 
-	log.WithFields(log.Fields{
-		"level":   "debug",
-		"place":   "neuron",
-		"func":    "UpdateWeights",
-		"msg":     "updating weights of neuron",
-		"weights": neuron.Weights,
-	}).Debug()
+	// log.WithFields(log.Fields{
+	// 	"level":   "debug",
+	// 	"place":   "neuron",
+	// 	"func":    "UpdateWeights",
+	// 	"msg":     "updating weights of neuron",
+	// 	"weights": neuron.Weights,
+	// }).Debug()
 
 	// return errors
 	return prevError, postError
@@ -134,15 +131,15 @@ func TrainNeuron(neuron *NeuronUnit, patterns []Pattern, epochs int, init int) {
 			squaredPostError = squaredPostError + (postError * postError)
 		}
 
-		log.WithFields(log.Fields{
-			"level":            "debug",
-			"place":            "error evolution in epoch",
-			"method":           "TrainNeuron",
-			"msg":              "epoch and squared errors reached before and after updating weights",
-			"epochReached":     epoch + 1,
-			"squaredErrorPrev": squaredPrevError,
-			"squaredErrorPost": squaredPostError,
-		}).Debug()
+		// log.WithFields(log.Fields{
+		// 	"level":            "debug",
+		// 	"place":            "error evolution in epoch",
+		// 	"method":           "TrainNeuron",
+		// 	"msg":              "epoch and squared errors reached before and after updating weights",
+		// 	"epochReached":     epoch + 1,
+		// 	"squaredErrorPrev": squaredPrevError,
+		// 	"squaredErrorPost": squaredPostError,
+		// }).Debug()
 
 		// increment epoch counter
 		epoch++
