@@ -6,7 +6,6 @@ import (
 	// sys import
 	"os"
 	//"fmt"
-	"math"
 
 	// third part import
 	mu "github.com/salvacorts/go-perceptron-go/util"
@@ -158,14 +157,15 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 				// sum output value of previous neurons multiplied by weight between previous and focused neuron
 				nv += mlp.NeuralLayers[k].NeuronUnits[i].Weights[j] * mlp.NeuralLayers[k-1].NeuronUnits[j].Value
 
-				// log.WithFields(log.Fields{
-				// 	"level":                 "debug",
-				// 	"msg":                   "multilayer perceptron execution",
-				// 	"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
-				// 	"layer:  ":              k,
-				// 	"neuron: ":              i,
-				// 	"previous neuron: ":     j,
-				// }).Debug("Compute output propagation.")
+				/*log.WithFields(log.Fields{
+					"level":                 "debug",
+					"msg":                   "multilayer perceptron execution",
+					"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
+					"layer:  ":              k,
+					"neuron: ":              i,
+					"previous neuron: ":     j,
+				}).Debug("Compute output propagation.")
+				/**/
 
 			}
 
@@ -180,30 +180,30 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 
 				for z := len(s.Features); z < mlp.NeuralLayers[0].Length; z++ {
 
-					// log.WithFields(log.Fields{
-					// 	"level":                               "debug",
-					// 	"len z":                               z,
-					// 	"s.Features":                          s.Features,
-					// 	"len(s.Features)":                     len(s.Features),
-					// 	"len mlp.NeuralLayers[0].NeuronUnits": len(mlp.NeuralLayers[0].NeuronUnits),
-					// 	"len mlp.NeuralLayers[k].NeuronUnits": len(mlp.NeuralLayers[k].NeuronUnits),
-					// }).Debug("Save output of hidden layer to context.")
+					/*log.WithFields(log.Fields{
+						"level":                               "debug",
+						"len z":                               z,
+						"s.Features":                          s.Features,
+						"len(s.Features)":                     len(s.Features),
+						"len mlp.NeuralLayers[0].NeuronUnits": len(mlp.NeuralLayers[0].NeuronUnits),
+						"len mlp.NeuralLayers[k].NeuronUnits": len(mlp.NeuralLayers[k].NeuronUnits),
+					}).Debug("Save output of hidden layer to context.")
+					*/
 
 					mlp.NeuralLayers[0].NeuronUnits[z].Value = mlp.NeuralLayers[k].NeuronUnits[z-len(s.Features)].Value
-
 				}
 
 			}
 
-			// log.WithFields(log.Fields{
-			// 	"level":                 "debug",
-			// 	"msg":                   "setup new neuron output value after transfer function application",
-			// 	"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
-			// 	"layer:  ":              k,
-			// 	"neuron: ":              i,
-			// 	"outputvalue":           mlp.NeuralLayers[k].NeuronUnits[i].Value,
-			// }).Debug("Setup new neuron output value after transfer function application.")
-
+			/*log.WithFields(log.Fields{
+				"level":                 "debug",
+				"msg":                   "setup new neuron output value after transfer function application",
+				"len(mlp.NeuralLayers)": len(mlp.NeuralLayers),
+				"layer:  ":              k,
+				"neuron: ":              i,
+				"outputvalue":           mlp.NeuralLayers[k].NeuronUnits[i].Value,
+			}).Debug("Setup new neuron output value after transfer function application.")
+			*/
 		}
 
 	}
@@ -227,28 +227,8 @@ func Execute(mlp *MultiLayerNetwork, s *Pattern, options ...int) (r []float64) {
 // return [r:float64] delta error between generated output and expected output
 func BackPropagate(mlp *MultiLayerNetwork, s *Pattern, o []float64, options ...int) (r float64) {
 
-	var no []float64
-	// execute network with pattern passed over each level to output
-	if len(options) == 1 {
-		no = Execute(mlp, s, options[0])
-	} else {
-		no = Execute(mlp, s)
-	}
-
-	// init error
+	//var no []float64
 	e := 0.0
-
-	// compute output error and delta in output layer
-	for i := 0; i < mlp.NeuralLayers[len(mlp.NeuralLayers)-1].Length; i++ {
-
-		// compute error in output: output for given pattern - output computed by network
-		e = o[i] - no[i]
-
-		// compute delta for each neuron in output layer as:
-		// error in output * derivative of transfer function of network output
-		mlp.NeuralLayers[len(mlp.NeuralLayers)-1].NeuronUnits[i].Delta = e * mlp.T_func_d(no[i])
-
-	}
 
 	// backpropagate error to previous layers
 	// for each layers starting from the last hidden (len(mlp.NeuralLayers)-2)
@@ -307,14 +287,14 @@ func BackPropagate(mlp *MultiLayerNetwork, s *Pattern, o []float64, options ...i
 
 	// compute global errors as sum of abs difference between output execution for each neuron in output layer
 	// and desired value in each neuron in output layer
-	for i := 0; i < len(o); i++ {
+	// for i := 0; i < len(o); i++ {
 
-		r += math.Abs(no[i] - o[i])
+	// 	r += math.Abs(no[i] - o[i])
 
-	}
+	// }
 
-	// average error
-	r = r / float64(len(o))
+	// // average error
+	// r = r / float64(len(o))
 
 	return
 
@@ -322,7 +302,6 @@ func BackPropagate(mlp *MultiLayerNetwork, s *Pattern, o []float64, options ...i
 
 // MLPTrain train a mlp MultiLayerNetwork with BackPropagation algorithm for assisted learning.
 func MLPTrain(mlp *MultiLayerNetwork, patterns []Pattern, mapped []string, epochs int, bp ...bool) {
-
 	epoch := 0
 	output := make([]float64, len(mapped))
 
@@ -339,18 +318,37 @@ func MLPTrain(mlp *MultiLayerNetwork, patterns []Pattern, mapped []string, epoch
 			// setup desired output for specific class of pattern focused
 			output[int(pattern.SingleExpectation)] = 1.0
 
+			// execute network with pattern passed over each level to output
+			no := Execute(mlp, &pattern)
+
+			// init error
+			e := 0.0
+
+			// compute output error and delta in output layer
+			for i := 0; i < mlp.NeuralLayers[len(mlp.NeuralLayers)-1].Length; i++ {
+
+				// compute error in output: output for given pattern - output computed by network
+				e = output[i] - no[i]
+
+				// compute delta for each neuron in output layer as:
+				// error in output * derivative of transfer function of network output
+				mlp.NeuralLayers[len(mlp.NeuralLayers)-1].NeuronUnits[i].Delta = e * mlp.T_func_d(no[i])
+
+			}
+
 			// back propagation
 			if len(bp) > 0 && bp[0] {
 				BackPropagate(mlp, &pattern, output)
 			}
 		}
 
-		// log.WithFields(log.Fields{
-		// 	"level":  "info",
-		// 	"place":  "validation",
-		// 	"method": "MLPTrain",
-		// 	"epoch":  epoch,
-		// }).Debug("Training epoch completed.")
+		/*log.WithFields(log.Fields{
+			"level":  "info",
+			"place":  "validation",
+			"method": "MLPTrain",
+			"epoch":  epoch,
+		}).Debug("Training epoch completed.")
+		/**/
 
 		// if max number of epochs is reached
 		if epoch > epochs {
